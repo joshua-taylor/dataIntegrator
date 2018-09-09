@@ -1,0 +1,78 @@
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <title>Data Integrator</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- bootstrap js min -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" link href="/static/css/bootstrap.css">
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="padding-top:3px !important; padding-bottom:3px !important;">
+      <div class="container">
+        <a class="navbar-brand" style="color:white; font-size:18px;"  href={% url 'dashboard' %}><i class="fas fa-layer-group" style="color:white; font-size:24px" aria-hidden="true" style="font-size:12px"></i>Data Integrator</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" style="text-align: center" href={% url 'dashboard' %}><i class="fas fa-home" style="text-align: center; color:white; font-size:18px" aria-hidden="true" style="font-size:24px"></i><br>Home
+                <span class="sr-only">(current)</span>
+              </a>
+
+            <li class="nav-item">
+              {% if user.is_authenticated %}
+              <a class="nav-link" style="text-align: center" href="/logout"><i class="fas fa-sign-out-alt" style="color:white; font-size:18px" aria-hidden="true" style="font-size:24px"></i><br>Logout</a>
+              {% else %}
+            <li class="nav-item">
+              <a class="nav-link" style="text-align: center" href="/signup"><i class="fas fa-user-plus" style="color:white; font-size:18px" aria-hidden="true" style="font-size:24px"></i><br> Sign Up</a>
+            </li>
+              <a class="nav-link" style="text-align: center" href="/login"><i class="fas fa-sign-in-alt" style="color:white; font-size:18px" aria-hidden="true" style="font-size:24px"></i><br>Login</a>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+            <h1 class="mt-5"></h1>
+            {% block content %}
+            {% endblock %}
+        </div>
+      </div>
+    </div>
+
+
+  </body>
+
+</html>
+

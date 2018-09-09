@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title"><span class="badge badge-primary">1</span> Select and load file</h5>
+            <p class="card-text">Get started by picking a file here or uploading a new one.</p>
+          </div>
+      </div>
+
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secondary">2</span> Map the file to the template</h5>
+            <p class="card-text text-muted">Map your file across to align it to the template.</p>
+          </div>
+    </div>
+
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secondary">3</span> Check and submit</h5>
+            <p class="card-text text-muted">Wow, that was easy!</p>
+          </div>
+      </div>
+</div>
+<div class="jumbotron">
+    <h5> <a href="{% url 'dashboard' %}"> <i class="fas fa-arrow-alt-circle-left"></i> Back to Dashboard</a></h5>
+    <h1 class="display-5">You are responding to  <small>{{req.name}}</small></h1>
+    <p class="lead">Description: {{req.desc}}</p>
+    <hr class="my-4">
+    <span class="badge badge-secondary">Created on:   {{req.created_at}}</span>
+    <span class="badge badge-secondary">Submission deadline:   {{req.deadline_date}}</span>
+</div>
+<hr>
+
+<h2>Select a file:</h2>
+<p>Pick a file below by clicking the 'Start mapping this file button'. This will load in the file and allow you to start mapping against the template.</p>
+<div class="container-fluid">
+    <div class="row">
+        {% if documents %}
+            {% for obj in documents %}
+            <div class="col-sm-4">
+                <div class="card border-primary mb-3" style="max-width: 20rem;">
+                  <div class="card-header"><a href="{{ obj.document.url }}">{{ obj.description }}</a></div>
+                  <div class="card-body">
+                    <h4 class="card-title">Details:</h4>
+                    <p class="card-text">Filename:<br> {{ obj.document.url }}</p>
+                    <p class="card-text">Uploaded at:<br> {{ obj.uploaded_at }}</p>
+                    <a href={% url 'map2' req_id=req_id  doc_id=obj.pk file_accept=0 %} type="button" class="btn btn-primary btn-block">Start mapping this file</a>
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No documents.</p>
+        {% endif %}
+    </div>
+</div>
+<hr>
+  <h2>Or upload a new file to use:</h2>
+    <p>Can't see the file you need (or any file at all)? No problemo - simply click below in order to upload one:</p>
+  <h3><a href="{% url 'model_form_upload' %}" type="button" class="btn btn-primary"><i class="fa fa-cloud-upload-alt fa-fw" aria-hidden="true" style="font-size:24px"></i>&nbsp; upload a file</a></h3>
+
+
+{% endblock %}

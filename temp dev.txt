@@ -1,0 +1,34 @@
+type workon to show the virtual envs avaliable
+lifesaver on tables = python manage.py migrate --run-syncdb
+
+
+mailgun
+email w dots
+pw 2....
+
+freenom dataintegrator.tk
+same cred
+
+to do/fix:
+- csr token to add to map2 table 'relates to the following' edge???
+- Need indicator to show when a request has been responded to
+- handling of templates if file is changed in request
+- max file size for uploads
+- email handling for request sending
+- Does not seem to be able to detect blank manditory fields as issue
+- User ID = email address on sign up
+- Tidy up of details which show on the cards for requests/response/files
+- does the file upload on a request redirect to the next stage?
+- No match selection creates a key error in pandas (map2)
+- Delete and start again needs to change to edit item by item
+- map at upload a file stage needs to bring through request details and instructions
+- map/map2 need a progress line at top
+- Better handling of orthan files (auto delete)
+- need a logo for the browser tab heading
+- email list verification and split on semi colon if no commas
+- filter and sorting of request/file/response
+- need a warning label if no files uploaded (currently just 'no documents')
+- ability to select a tab in excel file
+- google analytics?
+- Confirmation popups on delete requests
+- privacy policy and terms

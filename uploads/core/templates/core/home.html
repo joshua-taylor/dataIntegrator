@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+body {
+background: #00B4DB;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #0083B0, #00B4DB);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #0083B0, #00B4DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.jumbotron {
+    background: rgba(204, 204, 204, 0.2);
+    text: white
+}
+
+</style>
+
+  <div class="jumbotron">
+  <h1 class="display-3" style="color:white"><i class="fas fa-layer-group" style="color:white; font-size:80px" aria-hidden="true" style="font-size:12px"></i>Data Integrator</h1>
+  <p class="lead" style="color:white">Data collection, collation and intergration for humans</p>
+  <hr class="my-4">
+  <p class="lead" style="color:white">
+      <i class="fas fa-check-circle" aria-hidden="true" style="font-size:24px; color:white"></i>
+      Request data from multiple people in multiple formats</p>
+  <p class="lead" style="color:white">
+        <i class="fas fa-check-circle" aria-hidden="true" style="font-size:24px; color:white"></i>
+      Build reusable data templates</p>
+  <p class="lead" style="color:white">
+    <i class="fas fa-check-circle" aria-hidden="true" style="font-size:24px; color:white"></i>
+      Map existing data to a common structure</p>
+  <p class="lead" style="color:white">
+    <i class="fas fa-check-circle" aria-hidden="true" style="font-size:24px; color:white"></i>
+      Built for messy, real-world data</p>
+  <p class="lead" style="color:white">
+    <a class="btn btn-primary btn-lg" href="/dashboard" role="button">Click here to get started</a>
+  </p>
+</div>
+
+{% endblock %}

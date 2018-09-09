@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+
+
+<div class="jumbotron">
+    <h5> <a href="{% url 'dashboard' %}"> <i class="fas fa-arrow-alt-circle-left"></i> Back to Dashboard</a></h5>
+    <h1 class="display-5">  {{req_header.name}}
+        {% if req_header.status = 'DRAFT' %}
+        <span class="badge badge-warning">{{req_header.status}}</span>
+        {% endif %}
+        {% if req_header.status = 'ACTIVE' %}
+        <span class="badge badge-primary">{{req_header.status}}</span>
+        {% endif %}
+    </h1>
+    <p class="lead">Description: {{req_header.desc}}</p>
+    <hr class="my-4">
+    <h5><a href={% url 'update_requests' pk=req_header.id %}> <i class="fas fa-edit"></i> Edit details</a></h5>
+    {% if req_header.status = 'DRAFT' %}
+        <p>This request will be sent to:</p>
+    {% endif %}
+    {% if req_header.status = 'ACTIVE' %}
+        <p>This request has been sent to:</p>
+    {% endif %}
+    <p>{{req_header.send_to}}</p>
+    <span class="badge badge-secondary">Created on:   {{req_header.created_at}}</span>
+    <span class="badge badge-secondary">Submission deadline:   {{req_header.deadline_date}}</span>
+
+    {% if req_header.status = 'DRAFT' %}
+        <hr>
+        <form id="finaliseRequest" action={% url 'reqstatus' %} method="POST">
+            {% csrf_token %}
+            <button  name="reqID" value={{req_header.pk}} type="submit" class="btn btn btn-warning btn-block" style="margin-bottom:4px;white-space:normal;"><i class="far fa-plus-square" aria-hidden="true" style="font-size:24px"></i>&nbsp; Finalise & send - warning you will no longer be able to edit after clicking this</button>
+            <input type="hidden" name="status" value="ACTIVE">
+            <input type="hidden" name="next" value="{{ request.path }}">
+        </form>
+    {% endif %}
+    <hr>
+        <form action="{% url 'delete_requests' pk=req_header.pk %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input class="btn btn-danger btn-sm" type="button" value=" Delete this request" />
+        <input type="hidden" name="next" value="{{ request.path }}">
+        </form>
+</div>
+
+<hr>
+
+{% if req_header.status = 'DRAFT' %}
+
+<div class="card">
+    <div class="card-body">
+<h3>Add a new field to the request template:</h3> <br>
+<form id="templateForm" class="form-horizontal" method="POST" action="">
+{% csrf_token %}
+
+{% for form in formset %}
+<label>{{form.label}} {{form}}</label>
+        {% for error in form.errors %}
+          <span class="badge badge-danger">{{ error }}</span>
+        {% endfor %}
+{% endfor %}
+<div class="row spacer">
+    <div class="col-4">
+        <button type="submit" class="btn btn-block btn-primary"><i class="far fa-plus-square" aria-hidden="true" style="font-size:24px"></i>&nbsp;     Add</button>
+    </div>
+</div>
+</form>
+</div>
+</div>
+<br>
+
+<div class="card">
+    <div class="card-body">
+<h3>Current template:</h3>
+        {% if template %}
+<div class="table-responsive">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Maximum length</th>
+        <th>Manditory field?</th>
+        <th>Delete this item</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in template %}
+      <tr>
+        <td>{{ item.field_name }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.desc }}</td>
+        <td>{{ item.max_len }}</td>
+        <td>{{ item.manditory }}</td>
+        <td><form action="{% url 'delete_template' pk=item.pk %}" method="POST">
+            {% csrf_token %}
+            <input class="btn btn-default btn-danger btn-sm" type="submit" value="Delete"/>
+            <input type="hidden" name="next" value="{{ request.path }}">
+            </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+        {% else %}
+<div class="alert alert-dismissible alert-warning">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4 class="alert-heading">Nothing here!</h4>
+  <p class="mb-0">Your template will appear here once you start to build it using the <a href="#templateForm" class="alert-link">form above.</a></p>
+</div>
+        {% endif %}
+</div>
+</div>
+{% endif %} <!---- LARGE END IF FOR DRAFT TEMPLATE ---->
+
+
+{% if req_header.status = 'ACTIVE' %} <!---- START OF ACTIVE TEMPLATE ---->
+{% if responses %}
+<div class="table-responsive">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>Received from</th>
+        <th>Date</th>
+        <th>Number of rows</th>
+        <th>Number of rows with issues</th>
+        <th>Download all data (including bad rows)?</th>
+      </tr>
+    </thead>
+    <tbody>
+    <form  action="{% url 'requestDownload' %}" method="POST">
+    {% csrf_token %}
+    {% for item in responses %}
+        <tr>
+            <td>{{ item.creator }}</td>
+            <td>{{ item.created_at }}</td>
+            <td>{{ item.rows }}</td>
+            <td>{{ item.badRows }}</td>
+            <td>
+                <div class="checkbox" id="{{ item.pk }}">
+                    <label><input type="radio" name="{{ item.pk }}" value="Y" checked>Yes</label>
+                 </div>
+                <div class="checkbox" id="{{ item.pk }}">
+                    <label><input type="radio" name="{{ item.pk }}" value="N">No</label>
+                </div>
+                <input type="hidden" name="file" value="{{ item.pk }}">
+            </td>
+         </tr>
+    {% endfor %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="req_id" value="{{ req_header.pk }}">
+        <input class="btn btn-default btn-primary btn-sm" type="submit" value="Generate file"/>
+    </form>
+    </tbody>
+  </table>
+{% else %}
+<div class="alert alert-dismissible alert-warning col-md-12 col-md-offset-4" align="center">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4 class="alert-heading"><i class="far fa-sad-tear" aria-hidden="true" style="font-size:36px"></i>&nbspNothing here!</h4>
+  <p class="mb-0">It does not look like anyone has submitted data yet. Don't worry, when they do, you will see it here.</p>
+</div>
+{% endif %}
+
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        {% if downloads %}
+            {% for obj in downloads %}
+            <div class="col-sm-4">
+                <div class="card border-primary mb-3" style="max-width: 20rem;">
+                  <div class="card-header"><a href="{{ obj.document.url }}">File avaliable to download</a></div>
+                  <div class="card-body">
+                    <h4 class="card-title">Details:</h4>
+                    <p class="card-text">Rows:<br> {{ obj.rows }}</p>
+                    <p class="card-text">Bad rows:<br> {{ obj.badRows }}</p>
+                    <p class="card-text">Created on:<br> {{ obj.created_at }}</p>
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+{% endif %} <!---- LARGE END IF FOR ACTIVE TEMPLATE ---->
+
+
+{% endblock %}

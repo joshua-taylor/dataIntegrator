@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% for item in mappedFiles %}
+<p>{{item.documentPath}} test</p>
+{% endfor %}
+
+
+
+{% endblock %}

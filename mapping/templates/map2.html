@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+{% if file_accept == '0' %}
+<div class="row">
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title"><span class="badge badge-primary">1</span> Select and load file</h5>
+            <p class="card-text">You have selected and loaded a file - click next to start mapping.</p>
+          </div>
+      </div>
+
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secondary">2</span> Map the file to the template</h5>
+            <p class="card-text text-muted">Map your file across to align it to the template.</p>
+          </div>
+    </div>
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secondary">3</span> Check and submit</h5>
+            <p class="card-text text-muted">Wow, that was easy!</p>
+          </div>
+      </div>
+{% elif file_accept == '1' %}
+<div class="row">
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secodary">1</span> Select and load file</h5>
+            <p class="card-text text-muted">You have selected and loaded a file - click next to start mapping.</p>
+          </div>
+      </div>
+
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title"><span class="badge badge-primary">2</span> Map the file to the template</h5>
+            <p class="card-text">Map your file across to align it to the template.</p>
+          </div>
+    </div>
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secondary">3</span> Check and submit</h5>
+            <p class="card-text text-muted">Wow, that was easy!</p>
+          </div>
+      </div>
+{% else %}
+<div class="row">
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secodary">1</span> Select and load file</h5>
+            <p class="card-text text-muted">You have selected and loaded a file - click next to start mapping.</p>
+          </div>
+      </div>
+
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title text-muted"><span class="badge badge-secodary">2</span> Map the file to the template</h5>
+            <p class="card-text text-muted">Map your file across to align it to the template.</p>
+          </div>
+    </div>
+  <div class="col-sm-4">
+        <div class="card-body">
+            <h5 class="card-title"><span class="badge badge-primary">3</span> Review your results</h5>
+            <p class="card-text">Wow, that was easy!</p>
+          </div>
+      </div>
+{% endif %}
+
+</div>
+<div class="jumbotron">
+    <h1 class="display-5">You are responding to  <small>{{req.name}}</small></h1>
+    <p class="lead">Description: {{req.desc}}</p>
+    <hr class="my-4">
+    <span class="badge badge-secondary">Created on:   {{req.created_at}}</span>
+    <span class="badge badge-secondary">Submission deadline:   {{req.deadline_date}}</span>
+</div>
+<hr>
+
+
+
+{% if file_accept == '0' %}
+
+<div class="alert alert-dismissible alert-success">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Great!</strong> Your file has been read successfully. It has {{rows}} rows and {{columns}} columns. Look at the preview below to make sure it has loaded as expected.</a>.
+</div>
+<a href={% url 'map2' req_id=req_id  doc_id=documents.pk file_accept=1 %} type="button" class="btn btn-primary btn-block"> Next &nbsp; <i class="far fa-caret-square-right" aria-hidden="true" style="font-size:24px"></i></a>
+<hr>
+  <h3>File preview:</h3>
+<hr>
+
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#preview">Preview</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#stats">Show me some stats!</a>
+  </li>
+
+</ul>
+<div id="myTabContent" class="tab-content">
+  <div class="tab-pane fade show active" id="preview">
+    <p><br>Top 5 rows of your file:</p>
+    <br>
+    {{ df_html| safe }}
+  </div>
+  <div class="tab-pane fade" id="stats">
+    <p><br>Summary stats on columns which are numerical in nature:</p>
+    <br>
+    {{ describe | safe}}
+  </div>
+
+</div>
+
+{% else %}
+
+{% if file_accept == '2' %}
+
+<div class="alert alert-dismissible alert-success">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Mapped!</strong> Your file has been mapped across to the template - the requestor will be able to see your submission. Have a look at the results below. If you want to amend or use a different, just start the process again. Your template has been saved so you can re-use this.
+</div>
+    {{ df_html| safe }}
+
+<!---THIS IS FOR when a template has already been mapped  ---->
+{% elif responses %}
+
+<p>You have mapped a file against this request - click below to use this or delete and start again:</p>
+<a href={% url 'map2' req_id=req_id  doc_id=documents.pk file_accept=2 %} type="button" class="btn btn-primary btn-block">  <i class="far fa-plus-square" aria-hidden="true" style="font-size:24px"></i>&nbsp;Submit</a>
+<hr>
+<div class="card">
+    <div class="card-body">
+<h3>Current template:</h3>
+<div class="table-responsive">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>Mapped Name</th>
+        <th>Origional name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Maximum length</th>
+        <th>Manditory field?</th>
+      </tr>
+    </thead>
+    <tbody>
+    <form  action="{% url 'map2' req_id=req_id doc_id=doc_id file_accept=file_accept %}" method="POST">
+    {% csrf_token %}
+
+    <input type="hidden" name="delete" value="delete">
+    {% for item in responses %}
+
+      <tr>
+        <td>{{ item.field_name }} </td>
+        <td>{{ item.mapped_field_name }} </td>
+        <td>{{ item.type }} </td>
+        <td>{{ item.desc }} </td>
+        <td>{{ item.max_len }} </td>
+        <td>{{ item.manditory }} </td>
+
+      </tr>
+    {% endfor %}
+    <input class="btn btn-default btn-danger btn-sm" type="submit" value="Delete and start again"/>
+    </form>
+    </tbody>
+  </table>
+</div>
+
+<!---END OF RESPONSES SECTION  ---->
+
+
+<!---START OF template SECTION  ---->
+{% elif template %}
+<a href={% url 'map2' req_id=req_id  doc_id=documents.pk file_accept=0 %} type="button" class="btn btn-primary btn-block">Back to file summary</a>
+
+<div class="card">
+    <div class="card-body">
+<h3>Current template:</h3>
+
+<div class="table-responsive">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Maximum length</th>
+        <th>Manditory field?</th>
+        <th>Relates to the following:</th>
+      </tr>
+    </thead>
+    <tbody>
+    <form  action="{% url 'map2' req_id=req_id doc_id=doc_id file_accept=file_accept %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+        {% for item in template %}
+    <input type="hidden" name="field_name" value="{{ item.field_name }}">
+    <input type="hidden" name="type" value="{{ item.type }}">
+    <input type="hidden" name="desc" value="{{ item.desc }}">
+    <input type="hidden" name="max_len" value="{{ item.max_len }}">
+    <input type="hidden" name="manditory" value="{{ item.manditory }}">
+        {% endfor %}
+    {% for item in template %}
+
+      <tr>
+        <td>{{ item.field_name }} </td>
+        <td>{{ item.type }} </td>
+        <td>{{ item.desc }} </td>
+        <td>{{ item.max_len }} </td>
+        <td>{{ item.manditory }} </td>
+        <td>
+    <div class="form-group">
+      <label for={{ item.field_name }}>Select list (select one):</label>
+      <select class="form-control" id={{ item.pk }} name="mapped_field_name">
+        {% for item in col_names %}
+        <option value="{{item}}">{{item}}</option>
+        {% endfor %}
+        <option>No match</option>
+      </select>
+    </div>
+
+        </td>
+      </tr>
+    {% endfor %}
+    <input class="btn btn-default btn-primary btn-sm" type="submit" value="Save"/>
+    </form>
+    </tbody>
+  </table>
+</div>
+{% endif %} <!--- this if is checking for a template  ---->
+
+
+{% endif %} <!--- file acceptance if (zero or one)  ---->
+{% endblock %}
